@@ -3,22 +3,27 @@
 
 **Inputs**
 
-**Technology Files (.tf):** The technology library contains detailed information about all the metal layers, vias and their design rules.
+1 **Technology Files (.tf):** The technology library contains detailed information about all the metal layers, vias and their design rules.
 
-**Reference libraries (ref.lib) (. DB'S)**
+2 **Reference libraries (ref.lib) (. DB'S)**
 
-**RTL (Verilog code) files**
+3 **RTL (Verilog code) files**
 
-**Design constraints(.sdc)**: Standard design constraints or Synopsys design constraints contains the timing and power related constraints which control design
+4 **Design constraints(.sdc)**: Standard design constraints or Synopsys design constraints contains the timing and power related constraints which control design
 
-**TLU-plus files (parasitic files):** TLU+ file is a binary file which is a kind model contains advanced process effect that can be used to extract RC value from interconnects.
+5 **TLU-plus files (parasitic files):** TLU+ file is a binary file which is a kind model contains advanced process effect that can be used to extract RC value from interconnects.
 
 
-**Synthesis Step-1 (Creating the Milky Way Libraries):**
+>>>>>>>>> **Synthesis Step-1 (Creating the Milky Way Libraries):**
+ 
  set tech_file  {../ref/tech/saed32nm_1p9m.tf}
+ 
 set synthetic_library dw_foundation.sldb
+
 #set mw_path "./libs/mw_libs"
+
 set mw_ref_libs "./libs/mw_libs/saed32_io_fc ./libs/mw_libs/saed32nm_lvt_1p9m"
+
 set my_mw_lib riscv_mw_lib.mw
 
 create_mw_lib $my_mw_lib \
@@ -27,7 +32,8 @@ create_mw_lib $my_mw_lib \
          -open
 
  
-**Synthesis Step-2 (Setting the Libraries):**
+>>>>>>>>> **Synthesis Step-2 (Setting the Libraries):**
+ 
   set target_library  {\
 ../ref/DBs/saed32lvt_ss0p95v125c.db \
 ../ref/DBs/saed32lvt_ss0p95v125c.db \
@@ -54,7 +60,8 @@ set_tlu_plus_files\
 
 
 
-**Synthesis Step-3 (Reading SDC and RTL):**
+>>>>>>>>> **Synthesis Step-3 (Reading SDC and RTL):**
+
 source ./scripts/riscv_rtl.tcl
 
  current_design riscv_cpu
@@ -73,12 +80,13 @@ read_sdc ./constraints/riscv.sdc
 ![image](https://github.com/user-attachments/assets/17ab6a67-1a1c-4409-bac6-79fa1cccae7a)
 
 
-**Synthesis Step-4 (Compile Ultra):**           
+>>>>>>>>> **Synthesis Step-4 (Compile Ultra):**           
 
 compile_ultra -no_autoungroup -no_boundary_optimization
  
 
-**Synthesis Step-5 (Generating Reports)**
+>>>>>>>>> **Synthesis Step-5 (Generating Reports)**
+
 write_icc2_files -output ./results/riscv  -force
 
 write -hierarchy -format ddc -output ./results/riscv.ddc 
@@ -123,7 +131,8 @@ Power, timing, and area reports
 
 **Design constraints file and Gate-level Netlist from DC**
 
-**Step-1 (Creating Library)**
+>>>>>>>>> **Step-1 (Creating Library)**
+
 #library creation
 create_lib -technology ../ref/tech/saed32nm_1p9m.tf -ref_libs  \
 {../ref/CLIBs/saed32_1p9m_tech.ndm ../ref/CLIBs/saed32_hvt.ndm  \
@@ -131,7 +140,8 @@ create_lib -technology ../ref/tech/saed32nm_1p9m.tf -ref_libs  \
 ../ref/CLIBs/saed32_sram_lp.ndm} riscv_block
 
  
-**Step-2 (Reading Netlist and SDC)**
+>>>>>>>>> **Step-2 (Reading Netlist and SDC)**
+
  #reading netlist and SDC
 read_verilog  ../synthysis_DC/results/riscv.v
 read_sdc ../synthysis_DC/results/riscv.sdc
@@ -139,7 +149,7 @@ read_sdc ../synthysis_DC/results/riscv.sdc
 
 
 
-**Step-3 (Reading TLU+ Files and MCMM)**
+>>>>>>>>> **Step-3 (Reading TLU+ Files and MCMM)**
 
 #parasitic reading
 read_parasitic_tech -name {new_model} -tlup {../ref/tech/saed32nm_1p9m_Cmin.lv.tluplus} -layermap  \
@@ -152,14 +162,17 @@ read_parasitic_tech -layermap ../ref/tech/saed32nm_tf_itf_tluplus.map -tlup ../r
 source -echo ../design_data/mcmm_risc_core.tcl
 
  
-**Step-4 (Floorplanning)**
+>>>>>>>>> **Step-4 (Floorplanning)**
+
 #floor plan  
 initialize_floorplan -shape U -orientation E -side_ratio {15 5 3 3 3 3} -core_offset {5}
 
 set_block_pin_constraints -self -allowed_layers {M3 M4} -sides 1
+
 place_pins -ports [get_ports -filter direction==in]
 
 set_block_pin_constraints -self -allowed_layers {M3 M4} -sides {2 3 5 7}
+
 place_pins -ports [get_ports -filter direction==out]
 
 set_attribute [get_ports *] physical_status fixed
@@ -178,12 +191,13 @@ set_attribute [get_ports *] physical_status fixed
 
 
 
-**Step-5 (Powerplanning)**
+>>>>>>>>> **Step-5 (Powerplanning)**
 
 
  source ./scripts/powerplan.tcl
-check_pg_drc
 
+check_pg_drc
+ 
 
 ![image](https://github.com/user-attachments/assets/929170f6-583f-4c56-afb8-4cb4446bdea2)
 
@@ -194,7 +208,7 @@ check_pg_drc
 
  
 
-**Step-6 (Placement)**
+>>>>>>>>> **Step-6 (Placement)**
 
 
 
@@ -224,20 +238,30 @@ legalize_placement
 ![image](https://github.com/user-attachments/assets/2768766f-cd0b-4bd7-b16d-63fc77715db1)
 
 place_pins -self
+
 place_opt
+
 report_placement
+
 report_timing
 
 
 
 
-**Step-7 (CTS)**
+>>>>>>>>> **Step-7 (CTS)**
+
 check_design -checks pre_clock_tree_stage
+
 set_app_options -name time.remove_clock_reconvergence_pessimism -value true
+
 report_clock_settings
+
 report_qor -summary
+
 report_timing
+
 clock_opt
+
 report_timing
 
 
@@ -251,7 +275,44 @@ report_timing
 
 
 
-**Step-8 (Routing)** 
+>>>>>>>>> **Step-8 (Routing)** 
+
+#routing
+
+#set_routing_rule all -clear -default_rule -min_routing_layer 1 -max_routing_layer 9
+
+check_design -checks pre_route_stage
+
+route_auto -max_detail_route_iterations 30
+
+route_eco
+
+route_opt
+
+report_timing
+
+report_routing_corridors
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/ac724d22-762d-4d3c-a570-12da06066c39)
+
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/b18eea68-1afb-4d5b-87e5-c0e65e068331)
+
+
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/8e5241a2-3dee-496a-b42c-3fd5236da36a)
 
 
 
@@ -261,17 +322,30 @@ report_timing
 
 
 
-Reports
+**Reports**
+
 Slack -0.01ns met
+
 WNS for Setup is 0.01
+
 WNS for Hold is 0.06
+
 Cell area is 24782.09
+
 Total Type of cells used is 159
+
 Total no of std cells is 7304
 
-Output 
+DRC Violation of pg is 0
+
+
+**Output** 
+
 GDS II file
+
 SDC file
+
 SDF file
+
 Specification file
 
