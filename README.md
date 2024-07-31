@@ -1,5 +1,7 @@
 Synthesis
+
 Inputs 
+
 Technology Files (.tf): The technology library contains detailed information about all the metal layers, vias and their design rules.
 Reference libraries (ref.lib) (. DB'S)
 RTL (Verilog code) files
