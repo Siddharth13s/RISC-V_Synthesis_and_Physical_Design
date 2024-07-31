@@ -1,0 +1,29 @@
+Writing verilog file '/home1/BPD20/SiddharthSahu/VLSI_PD/Project/RISCV/synthysis_DC/results/riscv/riscv_cpu.v'.
+Warning: Verilog 'assign' or 'tran' statements are written out. (VO-4)
+Warning: Verilog writer has added 13 nets to module riscv_cpu using SYNOPSYS_UNCONNECTED_ as prefix.  Please use the change_names command to make the correct changes before invoking the verilog writer.  (VO-11)
+1
+1
+Information: No Scenarios exist, writing data for one virtual_scenario
+Warning: Deleting existing directory ./results/riscv/riscv_cpu.MCMM
+Information: Creating directory ./results/riscv/riscv_cpu.MCMM
+Information: The default DEF output is in version 5.8. (DCT-320)
+Information: Writing COMPONENTS section (DDEFW-014)
+Information: Completed COMPONENTS section  (DDEFW-016)
+Information: Writing PINS section (DDEFW-014)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_0' for unconnected port 'mem_rwe_o[3]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_1' for unconnected port 'mem_rwe_o[2]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_2' for unconnected port 'mem_rwe_o[1]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_3' for unconnected port 'mem_rwe_o[0]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_4' for unconnected port 'mem_sel_o[7]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_5' for unconnected port 'mem_sel_o[6]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_6' for unconnected port 'mem_sel_o[5]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_7' for unconnected port 'mem_sel_o[4]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_8' for unconnected port 'mem_sel_o[3]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_9' for unconnected port 'mem_sel_o[2]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_10' for unconnected port 'mem_sel_o[1]'. (DDEFW-006)
+Information: Creating dummy net 'SYNOPSYS_UNCONNECTED_11' for unconnected port 'mem_sel_o[0]'. (DDEFW-006)
+Information: Completed PINS section  (DDEFW-016)
+Information: No groups were written. (RPGP-018)
+1
+Warning: Failed to find cell expansion data in current design.  (PSYN-1240)
+0

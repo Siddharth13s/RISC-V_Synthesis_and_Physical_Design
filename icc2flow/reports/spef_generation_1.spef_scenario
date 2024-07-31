@@ -1,0 +1,9 @@
+./reports/spef_generation_1.maxTLU_125.spef for scenarios: 
+	 scenario: func.ss_125c, corner type: late/early
+
+./reports/spef_generation_1.maxTLU_-40.spef for scenarios: 
+	 scenario: func.ss_m40c, corner type: late/early
+
+./reports/spef_generation_1.minTLU_-40.spef for scenarios: 
+	 scenario: func.ff_m40c, corner type: late/early
+

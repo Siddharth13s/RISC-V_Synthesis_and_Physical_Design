@@ -1,0 +1,57 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : riscv_cpu
+Version: T-2022.03-SP4
+Date   : Wed Jul 31 19:18:18 2024
+****************************************
+
+
+Library(s) Used:
+
+    saed32lvt_ss0p95v125c (File: /home1/BPD20/SiddharthSahu/VLSI_PD/Project/RISCV/ref/DBs/saed32lvt_ss0p95v125c.db)
+
+
+Operating Conditions: ss0p95v125c   Library: saed32lvt_ss0p95v125c
+Wire Load Model Mode: Inactive.
+
+
+Global Operating Voltage = 0.95 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000ff
+    Time Units = 1ns
+    Dynamic Power Units = 1uW    (derived from V,C,T units)
+    Leakage Power Units = 1pW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+Warning: Cannot report correlated power unless power prediction mode is set. (PWR-727)
+Power Breakdown
+---------------
+
+                             Cell        Driven Net  Tot Dynamic      Cell
+                             Internal    Switching   Power (uW)       Leakage
+Cell                         Power (uW)  Power (uW)  (% Cell/Tot)     Power (pW)
+--------------------------------------------------------------------------------
+Netlist Power                 760.1576     13.7954   7.740e+02 (98%)  9.632e+09
+Estimated Clock Tree Power   N/A         N/A         N/A (N/A)        N/A
+--------------------------------------------------------------------------------
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network    753.6349            0.0000            0.0000          753.6349  (   7.24%)  i
+register           0.1148            0.4348        5.9973e+09        5.9978e+03  (  57.64%)
+sequential     -2.9174e-01            0.2531        9.5259e+08          952.5482 (   9.15%)
+combinational      6.6987           13.1076        2.6824e+09        2.7022e+03  (  25.97%)
+--------------------------------------------------------------------------------------------------
+Total            760.1567 uW        13.7954 uW     9.6323e+09 pW     1.0406e+04 uW
+1

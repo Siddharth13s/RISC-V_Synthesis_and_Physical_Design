@@ -1,0 +1,56 @@
+#library creation
+create_lib -technology ../../ref/tech/saed32nm_1p9m.tf -ref_libs  \
+{../../ref/CLIBs/saed32_1p9m_tech.ndm ../../ref/CLIBs/saed32_hvt.ndm  \
+../../ref/CLIBs/saed32_lvt.ndm ../../ref/CLIBs/saed32_rvt.ndm  \
+../../ref/CLIBs/saed32_sram_lp.ndm} router_block_10
+
+#reading netlist and SDC
+read_verilog  ../netlist/router_10.v
+read_sdc ../constraints/router_10.sdc
+
+#floor plan    
+link_design
+initialize_floorplan
+
+#parasitic reading
+read_parasitic_tech -name {new_model} -tlup {../../ref/tech/saed32nm_1p9m_Cmin.lv.tluplus} -layermap  \
+{../../ref/tech/saed32nm_tf_itf_tluplus.map}
+current_corner default
+set_parasitic_parameters -early_spec new_model -late_spec new_model
+set_process_number 0.99 -corners default
+set_temperature 125 -corners default
+set_voltage 0.75 -corners default
+current_mode default
+read_sdc ../constraints/router_10.sdc
+set_scenario_status default -active true -setup true -hold true -max_transition true -max_capacitance true -min_capacitance true -leakage_power true  \
+-dynamic_power true
+
+#placement
+create_placement -floorplan
+legalize_placement
+place_pins -self
+
+#clock route
+set_app_options -name time.remove_clock_reconvergence_pessimism -value true
+report_clock_settings
+report_qor -summary
+clock_opt
+
+#routing
+#set_routing_rule all -clear -default_rule -min_routing_layer 1 -max_routing_layer 9
+route_auto -max_detail_route_iterations 30
+route_eco
+#signoff_check_drc -auto_eco true
+check_lvs
+save_block
+
+#script writing
+write_script -force -format icc2 -output ../reports/router_spef
+write_parasitics -output ../reports/spef_generation_1
+write_sdf ../results/router_1.sdf
+write_verilog ../results/router_1.v
+write_gds ../results/router_1.gds
+write_sdc -output ../results/router_v.sdc
+
+save_block
+

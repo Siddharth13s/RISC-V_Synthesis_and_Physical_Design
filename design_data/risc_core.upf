@@ -1,0 +1,19 @@
+create_supply_net VDD
+create_supply_net VSS
+
+create_supply_set ss_main -function {power VDD} -function {ground VSS}
+create_power_domain PD_TOP  -supply {primary ss_main}
+
+create_supply_port VDD -domain PD_TOP -direction in
+create_supply_port VSS -domain PD_TOP -direction in
+
+connect_supply_net VDD -ports VDD
+connect_supply_net VSS -ports VSS
+
+set_design_attributes -elements {.} -attribute correlated_supply_group {*}
+add_power_state -supply ss_main -state ON  { -supply_expr { power == {FULL_ON 0.95 0.95 1.16} && ground == {FULL_ON 0.0} } }
+
+create_power_state_group PST
+add_power_state -group PST \
+        -state RUN   {-logic_expr { ss_main==ON }}
+

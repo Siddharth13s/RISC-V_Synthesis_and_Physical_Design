@@ -1,0 +1,146 @@
+#@ # 
+#@ # Running icc2_shell Version T-2022.03-SP4 for linux64 -- Aug 31, 2022
+#@ # Date:   Wed Jul 31 19:18:52 2024
+#@ # Run by: SiddharthSahu@mavenserver-RH3
+#@ 
+
+gui_set_pref_value -category {SelectByNamePalette} -key {ObjectType} -value {Logical Cells}
+create_lib -technology ../ref/tech/saed32nm_1p9m.tf -ref_libs  \
+{../ref/CLIBs/saed32_1p9m_tech.ndm ../ref/CLIBs/saed32_hvt.ndm  \
+../ref/CLIBs/saed32_lvt.ndm ../ref/CLIBs/saed32_rvt.ndm  \
+../ref/CLIBs/saed32_sram_lp.ndm} riscv_block
+read_verilog  ../synthysis_DC/results/riscv.v
+read_sdc ../synthysis_DC/results/riscv.sdc
+read_parasitic_tech -name {new_model} -tlup {../ref/tech/saed32nm_1p9m_Cmin.lv.tluplus} -layermap  \
+{../ref/tech/saed32nm_tf_itf_tluplus.map}
+read_parasitic_tech -layermap ../ref/tech/saed32nm_tf_itf_tluplus.map -tlup ../ref/tech/saed32nm_1p9m_Cmax.lv.nxtgrd -name maxTLU
+read_parasitic_tech -layermap ../ref/tech/saed32nm_tf_itf_tluplus.map -tlup ../ref/tech/saed32nm_1p9m_Cmin.lv.nxtgrd -name minTLU
+win_set_filter -visible -class cell -filter {clock_margin hard_macro_margin hard_margin route_blockage_margin soft_margin}
+win_set_filter -visible -class pseudo_bump -filter {deleted}
+win_set_filter -visible -class pseudo_tsv -filter {deleted}
+win_set_filter -visible -class placement_blockage -filter {wiring} -layer {0-82}
+win_set_filter -expand_cell_types {soft_macro  }
+win_set_select_class -visible {cell port bound routing_blockage shaping_blockage pg_region bump_region pseudo_bump pseudo_tsv pin_blockage block_shielding topology_node topology_edge topology_repeater annotation_shape core_area die_area edit_group shape via terminal fill_cell placement_blockage }
+win_set_filter -class cell -filter {array clock_margin hard_macro_margin hard_margin route_blockage_margin soft_margin}
+win_set_filter -class pseudo_bump -filter {deleted}
+win_set_filter -class pseudo_tsv -filter {deleted}
+win_set_filter -class placement_blockage -filter {wiring} -layer {0-82}
+win_set_select_class {cell port bound routing_blockage shaping_blockage pg_region bump_region pseudo_bump pseudo_tsv pin_blockage topology_node topology_edge topology_repeater annotation_shape edit_group shape via placement_blockage }
+source -echo ../design_data/mcmm_risc_core.tcl
+initialize_floorplan -shape U -orientation E -side_ratio {15 5 3 3 3 3} -core_offset {5}
+
+set_block_pin_constraints -self -allowed_layers {M3 M4} -sides 1
+place_pins -ports [get_ports -filter direction==in]
+
+set_block_pin_constraints -self -allowed_layers {M3 M4} -sides {2 3 5 7}
+place_pins -ports [get_ports -filter direction==out]
+
+set_attribute [get_ports *] physical_status fixed
+source ./scripts/powerplan.tcl
+check_pg_drc
+check_design -checks pre_placement_stage
+create_placement -floorplan
+legalize_placement
+place_pins -self
+place_opt
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {70.530 79.466}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {69.999 79.453}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {68.526 76.659}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {68.603 76.660}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {93.436 64.088}
+report_placement
+report_timing
+check_design -checks pre_clock_tree_stage
+set_app_options -name time.remove_clock_reconvergence_pessimism -value true
+report_clock_settings
+report_qor -summary
+report_timing
+clock_opt
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showRoutedPower -value false
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showRoutedSignal -value false
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showRoutedClock -value false
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showRoutedClock -value true
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showRoutedReset -value false
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showRoutedReset -value true
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showRoutedGround -value false
+win_set_filter -visible -class shape -filter {ground power signal} -layer {}
+win_set_filter -visible -class via -filter {ground power signal} -layer {}
+win_set_filter -class shape -filter {ground power signal} -layer {}
+win_set_filter -class via -filter {ground power signal} -layer {}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {110.370 67.977}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {110.370 67.977}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {110.370 67.977}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {110.301 67.968}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {110.360 67.967}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {110.360 67.967}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {110.310 68.115}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {111.232 70.451}
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showCell -value false
+win_set_select_class -visible {port bound routing_blockage shaping_blockage pg_region bump_region pseudo_bump pseudo_tsv pin_blockage block_shielding topology_node topology_edge topology_repeater annotation_shape core_area die_area edit_group shape via terminal fill_cell placement_blockage }
+win_set_select_class {port bound routing_blockage shaping_blockage pg_region bump_region pseudo_bump pseudo_tsv pin_blockage topology_node topology_edge topology_repeater annotation_shape edit_group shape via placement_blockage }
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {87.711 88.402}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {87.640 88.456}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {87.952 88.610}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {87.952 88.610}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {87.952 88.610}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {87.954 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {87.955 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {87.955 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {87.955 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {87.955 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {87.955 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {87.955 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {87.955 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {87.955 88.607}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {92.995 89.309}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {106.731 88.456}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {145.223 88.921}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {138.239 98.234}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {138.240 98.233}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {138.704 92.957}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {145.844 90.163}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {99.281 114.686}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {97.419 102.580}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {97.419 102.580}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {97.419 102.579}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {97.420 102.578}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {97.422 102.577}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {97.422 102.577}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {97.422 102.579}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {97.424 102.578}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {97.424 102.578}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {97.424 102.578}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {103.809 100.387}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {103.809 100.387}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {125.977 77.746}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {125.977 77.746}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {126.832 79.530}
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showCell -value true
+gui_set_setting -window [gui_get_current_window -types Layout -mru] -setting showRoutedSignal -value true
+win_set_filter -visible -class shape -filter {ground power} -layer {}
+win_set_filter -visible -class via -filter {ground power} -layer {}
+win_set_select_class -visible {cell port bound routing_blockage shaping_blockage pg_region bump_region pseudo_bump pseudo_tsv pin_blockage block_shielding topology_node topology_edge topology_repeater annotation_shape core_area die_area edit_group shape via terminal fill_cell placement_blockage }
+win_set_filter -class shape -filter {ground power} -layer {}
+win_set_filter -class via -filter {ground power} -layer {}
+win_set_select_class {cell port bound routing_blockage shaping_blockage pg_region bump_region pseudo_bump pseudo_tsv pin_blockage topology_node topology_edge topology_repeater annotation_shape edit_group shape via placement_blockage }
+report_timing
+check_design -checks pre_route_stage
+route_auto -max_detail_route_iterations 30
+route_eco
+route_opt
+report_timing
+report_routing_corridors
+check_pg_drc
+check_lvs
+save_block
+write_script -force -format icc2 -output ./reports/riscv_spef
+write_parasitics -output ./reports/spef_generation_1
+write_sdf ./results/riscv.sdf
+write_verilog ./results/riscv.v
+write_gds ./results/riscv.gds
+write_sdc -output ./results/riscv.sdc
+save_block
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {79.157 93.422}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 2 -at_point {125.099 65.640}
+gui_zoom -window [gui_get_current_window -types Layout -mru] -factor 0.5 -at_point {128.979 66.261}
+exit

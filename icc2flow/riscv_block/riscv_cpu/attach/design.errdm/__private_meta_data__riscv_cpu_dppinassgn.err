@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<errorData typeCount="0" majorVersion="1" minorVersion="8" name="__private_meta_data_:riscv_cpu_dppinassgn.err" designName="riscv_cpu" info="" checker="Pin Placement Check" checkerVersion="" created="1722433799" createdDate="07:31:2024:19:19:59:IST" modified="1722434976" modifiedDate="07:31:2024:19:39:36:IST" interactive="false" internal="false" metaData="true" numTypes="0" numInsts="0"/>

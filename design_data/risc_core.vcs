@@ -1,0 +1,16 @@
+-verilog +libext+.v +incdir+./risc_rtl
+risc_rtl/alu.v
+risc_rtl/control.v
+risc_rtl/data_path.v
+risc_rtl/instrn_lat.v
+risc_rtl/prgrm_cnt.v
+risc_rtl/prgrm_decode.v
+risc_rtl/prgrm_fsm.v
+risc_rtl/prgrm_cnt_top.v
+risc_rtl/reg_file_regs.v
+risc_rtl/reg_file.v
+risc_rtl/stack_fsm.v
+risc_rtl/stack_mem.v
+risc_rtl/stack_top.v
+risc_rtl/risc_core.v
+
