@@ -72,40 +72,111 @@ read_sdc ./constraints/riscv.sdc
 ![image](https://github.com/user-attachments/assets/17ab6a67-1a1c-4409-bac6-79fa1cccae7a)
 
 
-Synthesis Step-4 (Compile Ultra): 
+**Synthesis Step-4 (Compile Ultra):**           
+
+compile_ultra -no_autoungroup -no_boundary_optimization
  
 
-Synthesis Step-5 (Generating Reports)
- 
-Output:
+**Synthesis Step-5 (Generating Reports)**
+write_icc2_files -output ./results/riscv  -force
+write -hierarchy -format ddc -output ./results/riscv.ddc 
+report_area > ./reports/riscv.rpt
+report_hierarchy > ./reports/riscv.rpt
+report_design > ./reports/riscv.rpt
+report_timing -path full > ./reports/riscv.rpt
+report_power > ./reports/riscv.rpt
+write -hierarchy -format verilog -output ./results/riscv.v
+write_sdf  ./reports/riscv.sdf
+write_parasitics -output ./results/riscv_v_parastics_8_6
+write_sdc ./results/riscv.sdc 
+write -format ddc -h -o ./results/riscv.ddc 
+
+**Output:**
+
 Gate-level Netlist
+
 SDC 
+
 Power, timing, and area reports
 
-PNR flow
-Inputs
-Technology files(.tf): Detailed information about all the metal layers, vias and their design rules.
-NDM libraries: A reference library format used by Synopsys IC compiler II tool
-TLU-plus files (parasitic files): TLU+ file is a binary file which is a kind model contains advanced process effect that can be used to extract RC value from interconnects.
-Design constraints file and Gate-level Netlist from DC
+**PNR flow**
 
-Step-1 (Creating Library)
+**Inputs**
+
+**Technology files(.tf):** Detailed information about all the metal layers, vias and their design rules.
+
+**NDM libraries:** A reference library format used by Synopsys IC compiler II tool
+
+**TLU-plus files (parasitic files):** TLU+ file is a binary file which is a kind model contains advanced process effect that can be used to extract RC value from interconnects.
+
+**Design constraints file and Gate-level Netlist from DC**
+
+**Step-1 (Creating Library)**
+#library creation
+create_lib -technology ../ref/tech/saed32nm_1p9m.tf -ref_libs  \
+{../ref/CLIBs/saed32_1p9m_tech.ndm ../ref/CLIBs/saed32_hvt.ndm  \
+../ref/CLIBs/saed32_lvt.ndm ../ref/CLIBs/saed32_rvt.ndm  \
+../ref/CLIBs/saed32_sram_lp.ndm} riscv_block
+
  
-Step-2 (Reading Netlist and SDC)
- 
+**Step-2 (Reading Netlist and SDC)**
+ #reading netlist and SDC
+read_verilog  ../synthysis_DC/results/riscv.v
+read_sdc ../synthysis_DC/results/riscv.sdc
+![image](https://github.com/user-attachments/assets/1b3eb6bf-60b6-4b0a-9f68-1c80569deb2c)
 
 
-Step-3 (Reading TLU+ Files and MCMM)
+
+**Step-3 (Reading TLU+ Files and MCMM)**
+
+#parasitic reading
+read_parasitic_tech -name {new_model} -tlup {../ref/tech/saed32nm_1p9m_Cmin.lv.tluplus} -layermap  \
+{../ref/tech/saed32nm_tf_itf_tluplus.map}
+read_parasitic_tech -layermap ../ref/tech/saed32nm_tf_itf_tluplus.map -tlup ../ref/tech/saed32nm_1p9m_Cmax.lv.nxtgrd -name maxTLU
+read_parasitic_tech -layermap ../ref/tech/saed32nm_tf_itf_tluplus.map -tlup ../ref/tech/saed32nm_1p9m_Cmin.lv.nxtgrd -name minTLU
+
+
+#mcmm
+source -echo ../design_data/mcmm_risc_core.tcl
+
  
-Step-4 (Floorplanning)
+**Step-4 (Floorplanning)**
+#floor plan  
+initialize_floorplan -shape U -orientation E -side_ratio {15 5 3 3 3 3} -core_offset {5}
+
+set_block_pin_constraints -self -allowed_layers {M3 M4} -sides 1
+place_pins -ports [get_ports -filter direction==in]
+
+set_block_pin_constraints -self -allowed_layers {M3 M4} -sides {2 3 5 7}
+place_pins -ports [get_ports -filter direction==out]
+
+set_attribute [get_ports *] physical_status fixed
+![image](https://github.com/user-attachments/assets/ad202adf-1238-4dfb-8ad3-c994c8e04b88)
+
  
 
-Step-5 (Powerplanning)
- 
+**Step-5 (Powerplanning)**
+ source ./scripts/powerplan.tcl
+check_pg_drc
+![image](https://github.com/user-attachments/assets/929170f6-583f-4c56-afb8-4cb4446bdea2)
+![image](https://github.com/user-attachments/assets/e0ad639f-e22e-41cc-b7e3-c6d52d1b9eff)
+
+
  
 
-Step-6 (Placement)
- 
+**Step-6 (Placement)**
+ check_design -checks pre_placement_stage
+create_placement -floorplan
+![image](https://github.com/user-attachments/assets/6fc39854-3adc-4827-b4a6-0f06c5b01420)
+
+legalize_placement
+![image](https://github.com/user-attachments/assets/2768766f-cd0b-4bd7-b16d-63fc77715db1)
+
+place_pins -self
+place_opt
+report_placement
+report_timing
+
 
 
 Step-7 (CTS)
