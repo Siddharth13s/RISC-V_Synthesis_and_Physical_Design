@@ -1,6 +1,7 @@
 
 **Synthesis**
 
+
 **Inputs**
 
 1 **Technology Files (.tf):** The technology library contains detailed information about all the metal layers, vias and their design rules.
@@ -13,8 +14,11 @@
 
 5 **TLU-plus files (parasitic files):** TLU+ file is a binary file which is a kind model contains advanced process effect that can be used to extract RC value from interconnects.
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
->>>>>>>>> **Synthesis Step-1 (Creating the Milky Way Libraries):**
+
+
+>>>>>>>> **Synthesis Step-1 (Creating the Milky Way Libraries):**
  
  set tech_file  {../ref/tech/saed32nm_1p9m.tf}
  
@@ -30,6 +34,9 @@ create_mw_lib $my_mw_lib \
          -technology $tech_file \
          -mw_reference_library $mw_ref_libs \
          -open
+         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
  
 >>>>>>>>> **Synthesis Step-2 (Setting the Libraries):**
@@ -58,6 +65,8 @@ set_tlu_plus_files\
    		-max_tluplus ../ref/tech/saed32nm_1p9m_Cmax.lv.tluplus \
      		-min_tluplus ../ref/tech/saed32nm_1p9m_Cmin.lv.tluplus \
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 >>>>>>>>> **Synthesis Step-3 (Reading SDC and RTL):**
@@ -79,11 +88,17 @@ read_sdc ./constraints/riscv.sdc
 ![image](https://github.com/user-attachments/assets/7767a073-ae8e-4e18-94a5-7854425ea954)
 ![image](https://github.com/user-attachments/assets/17ab6a67-1a1c-4409-bac6-79fa1cccae7a)
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 >>>>>>>>> **Synthesis Step-4 (Compile Ultra):**           
 
 compile_ultra -no_autoungroup -no_boundary_optimization
- 
+
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 >>>>>>>>> **Synthesis Step-5 (Generating Reports)**
 
@@ -111,6 +126,9 @@ write_sdc ./results/riscv.sdc
 
 write -format ddc -h -o ./results/riscv.ddc 
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 **Output:**
 
 Gate-level Netlist
@@ -118,6 +136,8 @@ Gate-level Netlist
 SDC 
 
 Power, timing, and area reports
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 **PNR flow**
 
@@ -130,6 +150,9 @@ Power, timing, and area reports
 **TLU-plus files (parasitic files):** TLU+ file is a binary file which is a kind model contains advanced process effect that can be used to extract RC value from interconnects.
 
 **Design constraints file and Gate-level Netlist from DC**
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 >>>>>>>>> **Step-1 (Creating Library)**
 
@@ -139,13 +162,18 @@ create_lib -technology ../ref/tech/saed32nm_1p9m.tf -ref_libs  \
 ../ref/CLIBs/saed32_lvt.ndm ../ref/CLIBs/saed32_rvt.ndm  \
 ../ref/CLIBs/saed32_sram_lp.ndm} riscv_block
 
- 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 >>>>>>>>> **Step-2 (Reading Netlist and SDC)**
 
  #reading netlist and SDC
 read_verilog  ../synthysis_DC/results/riscv.v
 read_sdc ../synthysis_DC/results/riscv.sdc
 ![image](https://github.com/user-attachments/assets/1b3eb6bf-60b6-4b0a-9f68-1c80569deb2c)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -161,7 +189,10 @@ read_parasitic_tech -layermap ../ref/tech/saed32nm_tf_itf_tluplus.map -tlup ../r
 #mcmm
 source -echo ../design_data/mcmm_risc_core.tcl
 
- 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 >>>>>>>>> **Step-4 (Floorplanning)**
 
 #floor plan  
@@ -190,6 +221,9 @@ set_attribute [get_ports *] physical_status fixed
 
 
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 >>>>>>>>> **Step-5 (Powerplanning)**
 
@@ -207,6 +241,10 @@ check_pg_drc
 
 
  
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 >>>>>>>>> **Step-6 (Placement)**
 
@@ -247,6 +285,10 @@ report_timing
 
 
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
 >>>>>>>>> **Step-7 (CTS)**
 
@@ -271,6 +313,10 @@ report_timing
 ![image](https://github.com/user-attachments/assets/6788c853-c1a5-4052-a79e-b2f47b2ad079)
 
  
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -321,6 +367,8 @@ report_routing_corridors
 
 
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 **Reports**
 
@@ -337,6 +385,8 @@ Total Type of cells used is 159
 Total no of std cells is 7304
 
 DRC Violation of pg is 0
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 **Output** 
