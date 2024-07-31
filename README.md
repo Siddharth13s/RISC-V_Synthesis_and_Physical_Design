@@ -58,6 +58,7 @@ set_tlu_plus_files\
 source ./scripts/riscv_rtl.tcl
 
  current_design riscv_cpu
+
 read_sdc ./constraints/riscv.sdc 
 
  
@@ -79,16 +80,27 @@ compile_ultra -no_autoungroup -no_boundary_optimization
 
 **Synthesis Step-5 (Generating Reports)**
 write_icc2_files -output ./results/riscv  -force
+
 write -hierarchy -format ddc -output ./results/riscv.ddc 
+
 report_area > ./reports/riscv.rpt
+
 report_hierarchy > ./reports/riscv.rpt
+
 report_design > ./reports/riscv.rpt
+
 report_timing -path full > ./reports/riscv.rpt
+
 report_power > ./reports/riscv.rpt
+
 write -hierarchy -format verilog -output ./results/riscv.v
+
 write_sdf  ./reports/riscv.sdf
+
 write_parasitics -output ./results/riscv_v_parastics_8_6
+
 write_sdc ./results/riscv.sdc 
+
 write -format ddc -h -o ./results/riscv.ddc 
 
 **Output:**
@@ -151,25 +163,64 @@ set_block_pin_constraints -self -allowed_layers {M3 M4} -sides {2 3 5 7}
 place_pins -ports [get_ports -filter direction==out]
 
 set_attribute [get_ports *] physical_status fixed
+
+
+
 ![image](https://github.com/user-attachments/assets/ad202adf-1238-4dfb-8ad3-c994c8e04b88)
 
  
 
+
+
+
+
+
+
+
+
 **Step-5 (Powerplanning)**
+
+
  source ./scripts/powerplan.tcl
 check_pg_drc
+
+
 ![image](https://github.com/user-attachments/assets/929170f6-583f-4c56-afb8-4cb4446bdea2)
+
+
+
 ![image](https://github.com/user-attachments/assets/e0ad639f-e22e-41cc-b7e3-c6d52d1b9eff)
 
 
  
 
 **Step-6 (Placement)**
+
+
+
+
  check_design -checks pre_placement_stage
+ 
 create_placement -floorplan
+
+
+
+
+
+
 ![image](https://github.com/user-attachments/assets/6fc39854-3adc-4827-b4a6-0f06c5b01420)
 
+
+
+
+
 legalize_placement
+
+
+
+
+
+
 ![image](https://github.com/user-attachments/assets/2768766f-cd0b-4bd7-b16d-63fc77715db1)
 
 place_pins -self
@@ -179,14 +230,28 @@ report_timing
 
 
 
-Step-7 (CTS)
+
+**Step-7 (CTS)**
+check_design -checks pre_clock_tree_stage
+set_app_options -name time.remove_clock_reconvergence_pessimism -value true
+report_clock_settings
+report_qor -summary
+report_timing
+clock_opt
+report_timing
+
+
+
+
+
+![image](https://github.com/user-attachments/assets/6788c853-c1a5-4052-a79e-b2f47b2ad079)
+
  
 
 
 
 
-Step-8 (Routing)
- 
+**Step-8 (Routing)** 
 
 
 
